@@ -13,7 +13,7 @@ describe('/readers', () => {
         const response = await request(app).post('/readers').send({
           name: 'Elizabeth Bennet',
           email: 'future_ms_darcy@gmail.com',
-          password: 'secret',
+          password: 'secretpass',
         });
         const newReaderRecord = await Reader.findByPk(response.body.id, {
           raw: true,
@@ -23,7 +23,25 @@ describe('/readers', () => {
         expect(response.body.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
-        expect(newReaderRecord.password).to.equal('secret');
+        expect(newReaderRecord.password).to.equal('secretpass');
+      });
+    });
+  });
+
+  describe('with no records in the database', () => {
+    describe('POST /readers', () => {
+      it('returns 400 with incorrect email', async () => {
+        const response = await request(app).post('/readers').send({
+          name: 'John Smith',
+          email: 'johnsmithatgmail.com',
+          password: 'secretpass',
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.equal('Validation error: Email is not valid');
       });
     });
   });
