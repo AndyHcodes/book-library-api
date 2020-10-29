@@ -29,6 +29,39 @@ describe('/books', () => {
     });
   });
 
+  describe('with no posts in the database', () => {
+    describe('POST /books', () => {
+      it('returns 400 with no author', async () => {
+        const response = await request(app).post('/books').send({
+          title: 'Mr Nice',
+          ISBN: '123456',
+        });
+        const newBookRecord = await Book.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.equal(
+          'notNull Violation: Book.author cannot be null'
+        );
+      });
+      it('returns 400 with no title', async () => {
+        const response = await request(app).post('/books').send({
+          author: 'Howard Marks',
+          ISBN: '123456',
+        });
+        const newBookRecord = await Book.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.equal(
+          'notNull Violation: Book.title cannot be null'
+        );
+      });
+    });
+  });
+
   describe('with records in the database', () => {
     let books;
 
