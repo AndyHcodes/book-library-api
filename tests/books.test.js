@@ -42,7 +42,7 @@ describe('/books', () => {
 
         expect(response.status).to.equal(400);
         expect(response.body).to.equal(
-          'notNull Violation: Book.author cannot be null'
+          'notNull Violation: Please enter an author'
         );
       });
       it('returns 400 with no title', async () => {
@@ -56,7 +56,7 @@ describe('/books', () => {
 
         expect(response.status).to.equal(400);
         expect(response.body).to.equal(
-          'notNull Violation: Book.title cannot be null'
+          'notNull Violation: Please enter a title'
         );
       });
     });
