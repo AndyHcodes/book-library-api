@@ -1,4 +1,5 @@
 const { Reader } = require('../models');
+const { createItem } = require('./helpers');
 
 const getReaders = (_, res) => {
   Reader.findAll().then((readers) => {
@@ -6,19 +7,7 @@ const getReaders = (_, res) => {
   });
 };
 
-const createReader = (req, res) => {
-  const newReader = req.body;
-
-  Reader.create(newReader)
-    .then((newReaderCreated) => res.status(201).json(newReaderCreated))
-    .catch((error) => {
-      if (error.errors[0].type === 'Validation error') {
-        res.status(400).json(error.message);
-      } else {
-        res.status(500).json(error.message);
-      }
-    });
-};
+const createReader = (req, res) => createItem(res, 'reader', req.body);
 
 const updateReader = (req, res) => {
   const { id } = req.params;
